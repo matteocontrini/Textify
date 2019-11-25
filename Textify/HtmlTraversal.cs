@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Dom;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -53,7 +54,9 @@ namespace Textify
         {
             this.justClosedDiv = false;
 
-            switch (element.TagName.ToUpper())
+            string tagName = element.TagName.ToUpper();
+
+            switch (tagName)
             {
                 case "BR":
                     Write("\n");
@@ -62,6 +65,48 @@ namespace Textify
                 case "H1":
                 case "H2":
                 case "H3":
+                    Write("\n\n");
+
+                    HtmlTraversal headingTrav = new HtmlTraversal();
+                    headingTrav.TraverseChildren(element);
+
+                    string headingText = headingTrav.GetString();
+
+                    if (string.IsNullOrWhiteSpace(headingText))
+                    {
+                        break;
+                    }
+
+                    int dividerLength = headingText.Split('\n').Max(x => x.Length);
+                    string divider;
+
+                    if (tagName == "H1")
+                    {
+                        divider = new string('+', dividerLength);
+                    }
+                    else
+                    {
+                        divider = new string('-', dividerLength);
+                    }
+
+                    if (tagName == "H3")
+                    {
+                        Write(headingText);
+                        Write("\n");
+                        Write(divider);
+                    }
+                    else
+                    {
+                        Write(divider);
+                        Write("\n");
+                        Write(headingText);
+                        Write("\n");
+                        Write(divider);
+                    }
+
+                    Write("\n\n");
+                    break;
+
                 case "H4":
                 case "H5":
                 case "H6":
