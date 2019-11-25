@@ -136,9 +136,14 @@ namespace Textify
                     HtmlTraversal trav = new HtmlTraversal();
                     trav.TraverseChildren(element);
 
-                    Write("* ");
-                    Write(trav.GetString().Trim());
-                    Write("\n");
+                    string itemText = trav.GetString().Trim();
+
+                    if (!string.IsNullOrWhiteSpace(itemText))
+                    {
+                        Write("* ");
+                        Write(itemText);
+                        Write("\n");
+                    }
 
                     break;
 
