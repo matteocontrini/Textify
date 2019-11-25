@@ -38,7 +38,7 @@ namespace Textify
                         break;
                     }
 
-                    string text = Regex.Replace(node.TextContent, "[ \r\n\t]{2,}", " ");
+                    string text = Regex.Replace(node.TextContent, "[ \r\n\t]+", " ");
                     Write(text);
 
                     break;
