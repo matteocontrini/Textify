@@ -11,7 +11,11 @@ namespace Textify
 
             traversal.Traverse(element);
 
-            return traversal.GetString().Trim();
+            return traversal
+                .GetString()
+                .Trim()
+                // remove space at the end of each line
+                .Replace(" \n", "\n");
         }
 
         public string Convert(string html)
