@@ -111,7 +111,7 @@ namespace Textify
                     {
                         Write("[IMG: ");
                         Write(altText);
-                        Write("]");
+                        Write("] ");
                     }
 
                     break;
