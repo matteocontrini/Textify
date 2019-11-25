@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Textify", "Textify\Textify.csproj", "{76720286-8B5F-47BB-867D-B1C6F16F66F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Textify", "Textify\Textify.csproj", "{76720286-8B5F-47BB-867D-B1C6F16F66F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Textify.Example", "Textify.Example\Textify.Example.csproj", "{55E50C76-7B48-4607-BB49-0CE475F99435}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Textify.Example", "Textify.Example\Textify.Example.csproj", "{55E50C76-7B48-4607-BB49-0CE475F99435}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Textify.Tests", "Textify.Tests\Textify.Tests.csproj", "{AC89D563-9F3E-4B3F-BA1D-CDFE7DB81544}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{55E50C76-7B48-4607-BB49-0CE475F99435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55E50C76-7B48-4607-BB49-0CE475F99435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55E50C76-7B48-4607-BB49-0CE475F99435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC89D563-9F3E-4B3F-BA1D-CDFE7DB81544}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC89D563-9F3E-4B3F-BA1D-CDFE7DB81544}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC89D563-9F3E-4B3F-BA1D-CDFE7DB81544}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC89D563-9F3E-4B3F-BA1D-CDFE7DB81544}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

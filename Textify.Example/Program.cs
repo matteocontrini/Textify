@@ -2,7 +2,6 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Textify;
 
 namespace Textify.Example
 {
@@ -12,6 +11,8 @@ namespace Textify.Example
         {
             string url = "https://openfiber.it/mondo-open-fiber/comunicati-stampa/";
             //url = "https://event.unitn.it/cerimonia-laurea/";
+            //url = "https://blog.botfactory.it";
+            //url = "https://www.trentinoinrete.it/Documentazioni-per-gli-Enti-Locali/Previsione-degli-interventi-per-comune";
 
             HttpClient http = new HttpClient();
             string html = await http.GetStringAsync(url);
