@@ -77,9 +77,9 @@ namespace Textify
                     HtmlTraversal headingTrav = new HtmlTraversal();
                     headingTrav.TraverseChildren(element);
 
-                    string headingText = headingTrav.GetString();
+                    string headingText = headingTrav.GetString().Trim();
 
-                    if (string.IsNullOrWhiteSpace(headingText))
+                    if (string.IsNullOrEmpty(headingText))
                     {
                         break;
                     }
