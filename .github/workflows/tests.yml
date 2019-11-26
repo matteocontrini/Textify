@@ -14,10 +14,10 @@ jobs:
       with:
         dotnet-version: 3.0.101
     - name: Run tests
-      run: dotnet test /p:CollectCoverage=true
+      run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
     - name: Report coverage
       run: |
         ls -lh Textify.Tests
         curl -s https://codecov.io/bash > codecov
         chmod +x codecov
-        ./codecov -f "Textify.Tests/coverage.json" -t ${{ secrets.CODECOV_TOKEN }}
+        ./codecov -f "Textify.Tests/coverage.info" -t ${{ secrets.CODECOV_TOKEN }}
