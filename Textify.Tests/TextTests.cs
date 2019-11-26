@@ -37,5 +37,15 @@ namespace Textify.Tests
         {
             RunConversion(input, expected);
         }
+
+        [Theory]
+        [InlineData("<!-- comm  -->", "")]
+        [InlineData("Test<!-- comm -->1", "Test1")]
+        [InlineData("Test <!-- comm -->1", "Test 1")]
+        [InlineData("Test <!-- comm --> 1", "Test 1")]
+        public void ShouldIgnoreComments(string input, string expected)
+        {
+            RunConversion(input, expected);
+        }
     }
 }

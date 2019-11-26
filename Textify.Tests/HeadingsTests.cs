@@ -25,6 +25,19 @@ namespace Textify.Tests
         }
 
         [Theory]
+        [InlineData("<h1></h1>", "")]
+        [InlineData("<h1></h1>\nTest", "Test")]
+        [InlineData("<h2></h2>", "")]
+        [InlineData("<h3></h3>", "")]
+        [InlineData("<h4></h4>", "")]
+        [InlineData("<h5></h5>", "")]
+        [InlineData("<h6></h6>", "")]
+        public void ShouldIgnoreEmptyHeadings(string input, string expected)
+        {
+            RunConversion(input, expected);
+        }
+
+        [Theory]
         [InlineData("<h4>Test</h4>", "Test")]
         [InlineData("<h5>Test</h5>", "Test")]
         [InlineData("<h6>Test</h6>", "Test")]
