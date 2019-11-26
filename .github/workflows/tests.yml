@@ -14,4 +14,9 @@ jobs:
       with:
         dotnet-version: 3.0.101
     - name: Run tests
-      run: dotnet test Textify.Tests
+      run: dotnet test /p:CollectCoverage=true
+    - name: Report coverage
+      run: |
+        curl -s https://codecov.io/bash > codecov
+        chmod +x codecov
+        ./codecov -f "coverage.json" -t ${{ secrets.CODECOV_TOKEN }}
