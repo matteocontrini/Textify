@@ -41,5 +41,17 @@ namespace Textify.Tests
         {
             RunConversion(input, expected);
         }
+
+        [Theory]
+        [InlineData("<div><p>Test</p></div>", "Test")]
+        [InlineData("<div>Pre <p>Test</p></div>", "Pre\n\nTest")]
+        [InlineData("<div>Pre \n\t<p>Test</p></div>", "Pre\n\nTest")]
+        [InlineData("<div>Pre <p>Test <a>link</a></p></div>", "Pre\n\nTest link")]
+        [InlineData("<div>Pre <p>Test</p><div>Ha</div></div>", "Pre\n\nTest\n\nHa")]
+        [InlineData("<div>   Pre   <p>       Test</p>\n\n    \n<div>   Ha </div> </div>", "Pre\n\nTest\n\nHa")]
+        public void ShouldConvertNestedBlocks(string input, string expected)
+        {
+            RunConversion(input, expected);
+        }
     }
 }
