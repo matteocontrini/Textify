@@ -202,11 +202,6 @@ namespace Textify
 
         private void Write(string text)
         {
-            if (text == "")
-            {
-                return;
-            }
-
             foreach (char c in text)
             {
                 if (c == '\n')
