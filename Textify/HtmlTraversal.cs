@@ -214,6 +214,12 @@ namespace Textify
                     // Write no more than 1 empty line (\n twice)
                     if (this.newLinesCount < 2)
                     {
+                        // Remove space at the end of the previous line
+                        if (newLinesCount == 0 && lastWasSpace)
+                        {
+                            this.output.Length--;
+                        }
+
                         this.output.Append(c);
                         this.lineLength = 0;
                         this.newLinesCount++;
