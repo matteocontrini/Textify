@@ -1,4 +1,4 @@
-name: .NET Core
+name: Run tests
 
 on: [push]
 
@@ -13,5 +13,5 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.0.101
-    - name: Run Tests
+    - name: Run tests
       run: dotnet test Textify.Tests
