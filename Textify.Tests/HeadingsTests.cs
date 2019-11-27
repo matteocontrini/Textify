@@ -25,6 +25,15 @@ namespace Textify.Tests
         }
 
         [Theory]
+        [InlineData("<h1>First line<br>Second line</h1>", "+++++++++++\nFirst line\nSecond line\n+++++++++++")]
+        [InlineData("<h1>First line<br>  Second line</h1>", "+++++++++++\nFirst line\nSecond line\n+++++++++++")]
+        [InlineData("<h1>First line<br>\n\tSecond line</h1>", "+++++++++++\nFirst line\nSecond line\n+++++++++++")]
+        public void ShouldConvertMultilineHeadings(string input, string expected)
+        {
+            RunConversion(input, expected);
+        }
+
+        [Theory]
         [InlineData("<h1></h1>", "")]
         [InlineData("<h1></h1>\nTest", "Test")]
         [InlineData("<h2></h2>", "")]
