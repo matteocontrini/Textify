@@ -12,7 +12,6 @@ namespace Textify
         private int lineLength;
         private int newLinesCount;
         private bool lastWasSpace;
-        private bool insideTable;
 
         public HtmlTraversal()
         {
@@ -33,11 +32,6 @@ namespace Textify
                     break;
 
                 case NodeType.Text:
-                    if (this.insideTable)
-                    {
-                        break;
-                    }
-
                     string text = Regex.Replace(node.TextContent, "[ \r\n\t]+", " ");
                     Write(text);
 
@@ -178,19 +172,16 @@ namespace Textify
                 case "HEAD":
                     break;
 
-                case "TABLE":
-                    this.insideTable = true;
-                    TraverseChildren(element);
-                    this.insideTable = false;
-                    break;
-
                 case "TR":
                     TraverseChildren(element);
-                    Write("\n");
+                    // Separate rows with an empty line
+                    Write("\n\n");
                     break;
 
                 case "TD":
-                    Write(element.TextContent.Trim());
+                case "TH":
+                    TraverseChildren(element);
+                    // Separate table columns with a symbol
                     Write(" | ");
                     break;
 
