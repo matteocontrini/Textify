@@ -173,16 +173,23 @@ namespace Textify
                     break;
 
                 case "TR":
+                    // Start of table row
+                    Write("| ");
+
                     TraverseChildren(element);
+
                     // Separate rows with an empty line
                     Write("\n\n");
+                    
                     break;
 
                 case "TD":
                 case "TH":
                     TraverseChildren(element);
+                    
                     // Separate table columns with a symbol
                     Write(" | ");
+                    
                     break;
 
                 default:
