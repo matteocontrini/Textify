@@ -1,19 +1,18 @@
-﻿using AngleSharp.Html.Dom;
+﻿using AngleSharp.Dom;
+using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 
 namespace Textify
 {
     public class HtmlToTextConverter
     {
-        private string Convert(IHtmlElement element)
+        public string Convert(INode node)
         {
             HtmlTraversal traversal = new HtmlTraversal();
 
-            traversal.Traverse(element);
+            traversal.Traverse(node);
 
-            return traversal
-                .GetString()
-                .Trim();
+            return traversal.GetString().Trim();
         }
 
         public string Convert(string html)
