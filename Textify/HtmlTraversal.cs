@@ -1,4 +1,5 @@
-﻿using AngleSharp.Dom;
+﻿using System.Collections.Generic;
+using AngleSharp.Dom;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,14 +13,26 @@ namespace Textify
         private int lineLength;
         private int newLinesCount;
         private bool lastWasSpace;
+        private List<string> links;
 
         public HtmlTraversal()
         {
+            this.links = new List<string>();
             this.output = new StringBuilder();
         }
 
         public string GetString()
         {
+            if (links.Count() > 0)
+            {
+                Write("\n\n");
+                for (var linkIndex = 0; linkIndex < links.Count(); linkIndex++)
+                {
+                    var link = links[linkIndex];
+                    Write($"[{linkIndex + 1}] {link}{(linkIndex < links.Count() - 1 ? "\n" : string.Empty)}");
+                }
+            }
+
             return output.ToString();
         }
 
@@ -36,7 +49,7 @@ namespace Textify
                     Write(text);
 
                     break;
-                
+
                 default:
                     TraverseChildren(node);
                     break;
@@ -166,7 +179,7 @@ namespace Textify
                     }
 
                     break;
-                    
+
                 case "STYLE":
                 case "SCRIPT":
                 case "HEAD":
@@ -180,16 +193,41 @@ namespace Textify
 
                     // Separate rows with an empty line
                     Write("\n\n");
-                    
+
                     break;
 
                 case "TD":
                 case "TH":
                     TraverseChildren(element);
-                    
+
                     // Separate table columns with a symbol
                     Write(" | ");
-                    
+
+                    break;
+
+                case "A":
+                    string hrefAttribute = element.GetAttribute("href");
+                    var linkIndex = -1;
+
+                    if (!string.IsNullOrWhiteSpace((hrefAttribute)))
+                    {
+                        if (links.Contains(hrefAttribute))
+                        {
+                            linkIndex = links.IndexOf(hrefAttribute) + 1;
+                        }
+                        else
+                        {
+                            links.Add(hrefAttribute);
+                            linkIndex = links.Count();
+                        }
+                    }
+
+                    TraverseChildren(element);
+
+                    if (linkIndex >= 0)
+                    {
+                        Write($" ({linkIndex})");
+                    }
                     break;
 
                 default:
