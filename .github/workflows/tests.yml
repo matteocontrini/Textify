@@ -9,15 +9,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet: [ '3.1.x', '5.0.x' ]
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: ${{ matrix.dotnet }}
+        dotnet-version: 3.1.x
     - name: Run tests
       run: dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov
     - name: Report coverage
