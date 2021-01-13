@@ -12,6 +12,7 @@ namespace Textify
         private bool justClosedDiv;
         private int lineLength;
         private int newLinesCount;
+        private int depth;
         private bool lastWasSpace;
         private List<string> links;
 
@@ -155,7 +156,9 @@ namespace Textify
                 case "P":
                 case "UL":
                     Write("\n\n");
+                    depth++;
                     TraverseChildren(element);
+                    depth--;
                     Write("\n\n");
                     break;
 
@@ -268,6 +271,14 @@ namespace Textify
                     if (this.lastWasSpace && isSpace)
                     {
                         continue;
+                    }
+
+                    if (this.lineLength == 0)
+                    {
+                        for (int tab = 0; tab < depth - 1; tab++)
+                        {
+                            this.output.Append("\t");
+                        }
                     }
 
                     this.output.Append(c);
