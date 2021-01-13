@@ -147,18 +147,9 @@ namespace Textify
                     break;
 
                 case "LI":
-                    HtmlTraversal trav = new HtmlTraversal();
-                    trav.TraverseChildren(element);
-
-                    string itemText = trav.GetString().Trim();
-
-                    if (!string.IsNullOrWhiteSpace(itemText))
-                    {
-                        Write("* ");
-                        Write(itemText);
-                        Write("\n");
-                    }
-
+                    Write("* ");
+                    TraverseChildren(element);
+                    Write("\n");
                     break;
 
                 case "P":

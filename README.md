@@ -53,7 +53,7 @@ string output = converter.Convert(element);
 ```html
 <div id="page">
     <header>
-        <a href="/" class="site-logo">
+        <a href="http://example.com" class="site-logo">
         	<img src="logo.png" alt="Logo" />
         </a>
         <h1>
@@ -100,7 +100,7 @@ string output = converter.Convert(element);
 Output:
 
 ```
-[IMG: Logo]
+[IMG: Logo] [1]
 
 ++++++++++
 Site title
@@ -125,7 +125,8 @@ But maybe a table is nicer:
 | Key | Value |
 
 | One | Value |
-```
+
+[1] http://example.com```
 
 ## License
 
