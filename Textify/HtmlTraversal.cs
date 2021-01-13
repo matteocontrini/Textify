@@ -26,9 +26,9 @@ namespace Textify
             if (links.Count() > 0)
             {
                 Write("\n\n");
-                for (var linkIndex = 0; linkIndex < links.Count(); linkIndex++)
+                for (int linkIndex = 0; linkIndex < links.Count(); linkIndex++)
                 {
-                    var link = links[linkIndex];
+                    string link = links[linkIndex];
                     Write($"[{linkIndex + 1}] {link}{(linkIndex < links.Count() - 1 ? "\n" : string.Empty)}");
                 }
             }
@@ -207,9 +207,9 @@ namespace Textify
 
                 case "A":
                     string hrefAttribute = element.GetAttribute("href");
-                    var linkIndex = -1;
+                    int linkIndex = -1;
 
-                    if (!string.IsNullOrWhiteSpace((hrefAttribute)))
+                    if (!string.IsNullOrWhiteSpace(hrefAttribute))
                     {
                         if (links.Contains(hrefAttribute))
                         {
@@ -226,7 +226,7 @@ namespace Textify
 
                     if (linkIndex >= 0)
                     {
-                        Write($" ({linkIndex})");
+                        Write($" [{linkIndex}]");
                     }
                     break;
 
