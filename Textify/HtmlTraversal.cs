@@ -15,6 +15,7 @@ namespace Textify
         private int depth;
         private bool lastWasSpace;
         private List<string> links;
+        private const int dividerLength = 24;
 
         public HtmlTraversal()
         {
@@ -80,53 +81,46 @@ namespace Textify
                 case "H1":
                 case "H2":
                 case "H3":
-                    Write("\n\n");
-
-                    HtmlTraversal headingTrav = new HtmlTraversal();
-                    headingTrav.TraverseChildren(element);
-
-                    string headingText = headingTrav.GetString().Trim();
-
-                    if (string.IsNullOrEmpty(headingText))
-                    {
-                        break;
-                    }
-
-                    int dividerLength = headingText.Split('\n').Max(x => x.Length);
-                    string divider;
-
-                    if (tagName == "H1")
-                    {
-                        divider = new string('+', dividerLength);
-                    }
-                    else
-                    {
-                        divider = new string('-', dividerLength);
-                    }
-
-                    if (tagName == "H3")
-                    {
-                        Write(headingText);
-                        Write("\n");
-                        Write(divider);
-                    }
-                    else
-                    {
-                        Write(divider);
-                        Write("\n");
-                        Write(headingText);
-                        Write("\n");
-                        Write(divider);
-                    }
-
-                    Write("\n\n");
-                    break;
-
                 case "H4":
                 case "H5":
                 case "H6":
+
                     Write("\n\n");
+                    switch (tagName)
+                    {
+                        case "H1":
+                            Write(new string('=', dividerLength));
+                            Write("\n");
+                            break;
+                        case "H2":
+                            Write(new string('-', dividerLength));
+                            Write("\n");
+                            break;
+                        case "H3":
+                            Write("\n");
+                            Write("\n");
+                            break;
+                    }
+
                     TraverseChildren(element);
+
+                    if (lineLength > 0)
+                    {
+                        Write("\n");
+
+                        switch (tagName)
+                        {
+                            case "H1":
+                                Write(new string('=', dividerLength));
+                                break;
+                            case "H2":
+                                Write(new string('-', dividerLength));
+                                break;
+                            case "H3":
+                                Write("\n");
+                                break;
+                        }
+                    }
                     Write("\n\n");
                     break;
 
@@ -203,7 +197,7 @@ namespace Textify
                     string hrefAttribute = element.GetAttribute("href");
                     int linkIndex = -1;
 
-                    if (!string.IsNullOrWhiteSpace(hrefAttribute))
+                    if (!string.IsNullOrWhiteSpace(hrefAttribute) && !hrefAttribute.StartsWith("#"))
                     {
                         if (links.Contains(hrefAttribute))
                         {
