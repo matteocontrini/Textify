@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionPrefix>0.2.0</VersionPrefix>
     <VersionSuffix>beta</VersionSuffix>
     <Description>HTML to plaintext conversion library (.NET Standard 2.0).</Description>
     <RepositoryUrl>https://github.com/matteocontrini/Textify</RepositoryUrl>
