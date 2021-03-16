@@ -1,4 +1,5 @@
-﻿using AngleSharp.Dom;
+﻿using System.Collections.Generic;
+using AngleSharp.Dom;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -11,15 +12,29 @@ namespace Textify
         private bool justClosedDiv;
         private int lineLength;
         private int newLinesCount;
+        private int depth;
         private bool lastWasSpace;
+        private List<string> links;
+        private const int dividerLength = 24;
 
         public HtmlTraversal()
         {
+            this.links = new List<string>();
             this.output = new StringBuilder();
         }
 
         public string GetString()
         {
+            if (links.Count() > 0)
+            {
+                Write("\n\n");
+                for (int linkIndex = 0; linkIndex < links.Count(); linkIndex++)
+                {
+                    string link = links[linkIndex];
+                    Write($"[{linkIndex + 1}] {link}{(linkIndex < links.Count() - 1 ? "\n" : string.Empty)}");
+                }
+            }
+
             return output.ToString();
         }
 
@@ -36,7 +51,7 @@ namespace Textify
                     Write(text);
 
                     break;
-                
+
                 default:
                     TraverseChildren(node);
                     break;
@@ -66,53 +81,46 @@ namespace Textify
                 case "H1":
                 case "H2":
                 case "H3":
-                    Write("\n\n");
-
-                    HtmlTraversal headingTrav = new HtmlTraversal();
-                    headingTrav.TraverseChildren(element);
-
-                    string headingText = headingTrav.GetString().Trim();
-
-                    if (string.IsNullOrEmpty(headingText))
-                    {
-                        break;
-                    }
-
-                    int dividerLength = headingText.Split('\n').Max(x => x.Length);
-                    string divider;
-
-                    if (tagName == "H1")
-                    {
-                        divider = new string('+', dividerLength);
-                    }
-                    else
-                    {
-                        divider = new string('-', dividerLength);
-                    }
-
-                    if (tagName == "H3")
-                    {
-                        Write(headingText);
-                        Write("\n");
-                        Write(divider);
-                    }
-                    else
-                    {
-                        Write(divider);
-                        Write("\n");
-                        Write(headingText);
-                        Write("\n");
-                        Write(divider);
-                    }
-
-                    Write("\n\n");
-                    break;
-
                 case "H4":
                 case "H5":
                 case "H6":
+
                     Write("\n\n");
+                    switch (tagName)
+                    {
+                        case "H1":
+                            Write(new string('=', dividerLength));
+                            Write("\n");
+                            break;
+                        case "H2":
+                            Write(new string('-', dividerLength));
+                            Write("\n");
+                            break;
+                        case "H3":
+                            Write("\n");
+                            Write("\n");
+                            break;
+                    }
+
                     TraverseChildren(element);
+
+                    if (lineLength > 0)
+                    {
+                        Write("\n");
+
+                        switch (tagName)
+                        {
+                            case "H1":
+                                Write(new string('=', dividerLength));
+                                break;
+                            case "H2":
+                                Write(new string('-', dividerLength));
+                                break;
+                            case "H3":
+                                Write("\n");
+                                break;
+                        }
+                    }
                     Write("\n\n");
                     break;
 
@@ -134,24 +142,17 @@ namespace Textify
                     break;
 
                 case "LI":
-                    HtmlTraversal trav = new HtmlTraversal();
-                    trav.TraverseChildren(element);
-
-                    string itemText = trav.GetString().Trim();
-
-                    if (!string.IsNullOrWhiteSpace(itemText))
-                    {
-                        Write("* ");
-                        Write(itemText);
-                        Write("\n");
-                    }
-
+                    Write("* ");
+                    TraverseChildren(element);
+                    Write("\n");
                     break;
 
                 case "P":
                 case "UL":
                     Write("\n\n");
+                    depth++;
                     TraverseChildren(element);
+                    depth--;
                     Write("\n\n");
                     break;
 
@@ -166,7 +167,7 @@ namespace Textify
                     }
 
                     break;
-                    
+
                 case "STYLE":
                 case "SCRIPT":
                 case "HEAD":
@@ -180,16 +181,41 @@ namespace Textify
 
                     // Separate rows with an empty line
                     Write("\n\n");
-                    
+
                     break;
 
                 case "TD":
                 case "TH":
                     TraverseChildren(element);
-                    
+
                     // Separate table columns with a symbol
                     Write(" | ");
-                    
+
+                    break;
+
+                case "A":
+                    string hrefAttribute = element.GetAttribute("href");
+                    int linkIndex = -1;
+
+                    if (!string.IsNullOrWhiteSpace(hrefAttribute) && !hrefAttribute.StartsWith("#"))
+                    {
+                        if (links.Contains(hrefAttribute))
+                        {
+                            linkIndex = links.IndexOf(hrefAttribute) + 1;
+                        }
+                        else
+                        {
+                            links.Add(hrefAttribute);
+                            linkIndex = links.Count();
+                        }
+                    }
+
+                    TraverseChildren(element);
+
+                    if (linkIndex >= 0)
+                    {
+                        Write($" [{linkIndex}]");
+                    }
                     break;
 
                 default:
@@ -239,6 +265,14 @@ namespace Textify
                     if (this.lastWasSpace && isSpace)
                     {
                         continue;
+                    }
+
+                    if (this.lineLength == 0)
+                    {
+                        for (int tab = 0; tab < depth - 1; tab++)
+                        {
+                            this.output.Append("\t");
+                        }
                     }
 
                     this.output.Append(c);

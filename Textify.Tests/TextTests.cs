@@ -21,7 +21,7 @@ namespace Textify.Tests
         [Theory]
         [InlineData("My name is: <strong>Nic</strong>", "My name is: Nic")]
         [InlineData("My name is:<strong>Nic</strong>", "My name is:Nic")]
-        [InlineData("Visit \"<a href=\"http://example.com\">Example</strong>\"", "Visit \"Example\"")]
+        [InlineData("Visit \"<a href=\"http://example.com\">Example</strong>\"", "Visit \"Example\" [1]\n\n[1] http://example.com")]
         public void ShouldNotStripWhitespaceBetweenNodes(string input, string expected)
         {
             RunConversion(input, expected);
