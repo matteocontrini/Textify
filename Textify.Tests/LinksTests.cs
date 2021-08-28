@@ -20,8 +20,8 @@ namespace Textify.Tests
         }
 
         [Theory]
-        [InlineData("Hi <a href=\"link\"></a>---", "Hi [1]---\n\n[1] link")]
-        [InlineData("Hi<a href=\"link\"></a>.", "Hi [1].\n\n[1] link")]
+        [InlineData("Hi <a href=\"link\"></a>---", "Hi ---")]
+        [InlineData("Hi<a href=\"link\"></a>.", "Hi.")]
         public void ShouldCollapseEmptyLinks(string input, string expected)
         {
             RunConversion(input, expected);

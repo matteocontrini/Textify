@@ -8,8 +8,8 @@ namespace Textify
 {
     internal class HtmlTraversal
     {
-        private readonly StringBuilder output;
         private readonly List<string> links;
+        private readonly StringBuilder output;
         private bool justClosedDiv;
         private int lineLength;
         private int newLinesCount;
@@ -17,16 +17,16 @@ namespace Textify
         private bool lastWasSpace;
         private const int DividerLength = 24;
 
-        public HtmlTraversal()
+        public HtmlTraversal(List<string> links)
         {
-            this.links = new List<string>();
+            this.links = links;
             this.output = new StringBuilder();
         }
 
-        public string GetString()
+        public string GetString(bool includeLinks = false)
         {
             // Write out links
-            if (this.links.Any())
+            if (includeLinks && this.links.Any())
             {
                 Write("\n\n");
 
@@ -207,30 +207,40 @@ namespace Textify
                     break;
 
                 case "A":
-                    string hrefAttribute = element.GetAttribute("href");
-                    int linkNumber = 0;
+                    HtmlTraversal linkTraversal = new HtmlTraversal(this.links);
+                    linkTraversal.TraverseChildren(element);
+                    string linkText = linkTraversal.GetString();
 
-                    if (!string.IsNullOrWhiteSpace(hrefAttribute) && !hrefAttribute.StartsWith("#"))
+                    if (!string.IsNullOrWhiteSpace(linkText))
                     {
-                        int existingLinkIndex = this.links.IndexOf(hrefAttribute);
-                        if (existingLinkIndex >= 0)
-                        {
-                            linkNumber = existingLinkIndex + 1;
-                        }
-                        else
-                        {
-                            this.links.Add(hrefAttribute);
-                            linkNumber = this.links.Count;
-                        }
-                    }
+                        bool shouldReAddNewLine = linkText.EndsWith("\n");
+                        Write(linkText.Trim());
 
-                    TraverseChildren(element);
+                        string hrefAttribute = element.GetAttribute("href");
 
-                    if (linkNumber > 0)
-                    {
-                        Write(" [");
-                        Write(linkNumber.ToString());
-                        Write("]");
+                        if (!string.IsNullOrWhiteSpace(hrefAttribute) && !hrefAttribute.StartsWith("#"))
+                        {
+                            int linkNumber;
+                            int existingLinkIndex = this.links.IndexOf(hrefAttribute);
+                            if (existingLinkIndex >= 0)
+                            {
+                                linkNumber = existingLinkIndex + 1;
+                            }
+                            else
+                            {
+                                this.links.Add(hrefAttribute);
+                                linkNumber = this.links.Count;
+                            }
+
+                            Write(" [");
+                            Write(linkNumber.ToString());
+                            Write("]");
+                        }
+
+                        if (shouldReAddNewLine)
+                        {
+                            Write("\n");
+                        }
                     }
 
                     break;

@@ -1,4 +1,5 @@
-﻿using AngleSharp.Dom;
+﻿using System.Collections.Generic;
+using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
 using AngleSharp.Html.Parser;
 
@@ -8,11 +9,12 @@ namespace Textify
     {
         public string Convert(INode node)
         {
-            HtmlTraversal traversal = new HtmlTraversal();
+            List<string> links = new List<string>();
+            HtmlTraversal traversal = new HtmlTraversal(links);
 
             traversal.Traverse(node);
 
-            return traversal.GetString().Trim();
+            return traversal.GetString(true).Trim();
         }
 
         public string Convert(string html)
