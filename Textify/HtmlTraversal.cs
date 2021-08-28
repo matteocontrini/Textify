@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using AngleSharp.Dom;
 using System.Linq;
 using System.Text;
@@ -96,24 +98,42 @@ namespace Textify
                 case "H4":
                 case "H5":
                 case "H6":
-
                     Write("\n\n");
-                    switch (tagName)
+
+                    HtmlTraversal headingTraversal = new HtmlTraversal(this.links);
+                    headingTraversal.TraverseChildren(element);
+
+                    string headingText = headingTraversal.GetString().Trim();
+
+                    if (headingText != string.Empty)
                     {
-                        case "H1":
-                            Write("+++ ");
-                            break;
-                        case "H2":
-                            Write("++ ");
-                            break;
-                        default:
-                            Write("+ ");
-                            break;
+                        foreach (string line in headingText.Split('\n'))
+                        {
+                            if (string.IsNullOrWhiteSpace(line))
+                            {
+                                continue;
+                            }
+
+                            switch (tagName)
+                            {
+                                case "H1":
+                                    Write("+++ ");
+                                    break;
+                                case "H2":
+                                    Write("++ ");
+                                    break;
+                                default:
+                                    Write("+ ");
+                                    break;
+                            }
+
+                            Write(line);
+                            Write("\n");
+                        }
+
+                        Write("\n\n");
                     }
 
-                    TraverseChildren(element);
-
-                    Write("\n\n");
                     break;
 
                 case "DIV":

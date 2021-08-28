@@ -58,23 +58,15 @@ namespace Textify.Tests
     </main>
 </div>";
 
-            string expected = @"========================
-[IMG: Logo] [1]
-========================
+            string expected = @"+++ [IMG: Logo] [1]
 
-========================
-Article title
-========================
++++ Article title
 
-------------------------
-Article title
-------------------------
+++ Article title
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-------------------------
-Article title
-------------------------
+++ Article title
 
 Ut enim ad minim ignored veniam, quis [2] nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 
@@ -83,7 +75,6 @@ Here is a list of things anyway:
 * One
 * Two
 * Three [2]
-* [2]
 
 But maybe a table is nicer:
 
