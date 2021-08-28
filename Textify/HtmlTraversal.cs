@@ -8,14 +8,14 @@ namespace Textify
 {
     internal class HtmlTraversal
     {
-        private StringBuilder output;
+        private readonly StringBuilder output;
+        private readonly List<string> links;
         private bool justClosedDiv;
         private int lineLength;
         private int newLinesCount;
         private int depth;
         private bool lastWasSpace;
-        private List<string> links;
-        private const int dividerLength = 24;
+        private const int DividerLength = 24;
 
         public HtmlTraversal()
         {
@@ -25,17 +25,29 @@ namespace Textify
 
         public string GetString()
         {
-            if (links.Count() > 0)
+            // Write out links
+            if (this.links.Any())
             {
                 Write("\n\n");
-                for (int linkIndex = 0; linkIndex < links.Count(); linkIndex++)
+
+                for (int i = 0; i < this.links.Count; i++)
                 {
-                    string link = links[linkIndex];
-                    Write($"[{linkIndex + 1}] {link}{(linkIndex < links.Count() - 1 ? "\n" : string.Empty)}");
+                    string linkText = this.links[i];
+                    int linkNumber = i + 1;
+
+                    Write("[");
+                    Write(linkNumber.ToString());
+                    Write("] ");
+                    Write(linkText);
+
+                    if (i < this.links.Count - 1)
+                    {
+                        Write("\n");
+                    }
                 }
             }
 
-            return output.ToString();
+            return this.output.ToString();
         }
 
         public void Traverse(INode node)
@@ -89,11 +101,11 @@ namespace Textify
                     switch (tagName)
                     {
                         case "H1":
-                            Write(new string('=', dividerLength));
+                            Write(new string('=', DividerLength));
                             Write("\n");
                             break;
                         case "H2":
-                            Write(new string('-', dividerLength));
+                            Write(new string('-', DividerLength));
                             Write("\n");
                             break;
                         case "H3":
@@ -104,23 +116,24 @@ namespace Textify
 
                     TraverseChildren(element);
 
-                    if (lineLength > 0)
+                    if (this.lineLength > 0)
                     {
                         Write("\n");
 
                         switch (tagName)
                         {
                             case "H1":
-                                Write(new string('=', dividerLength));
+                                Write(new string('=', DividerLength));
                                 break;
                             case "H2":
-                                Write(new string('-', dividerLength));
+                                Write(new string('-', DividerLength));
                                 break;
                             case "H3":
                                 Write("\n");
                                 break;
                         }
                     }
+
                     Write("\n\n");
                     break;
 
@@ -150,9 +163,9 @@ namespace Textify
                 case "P":
                 case "UL":
                     Write("\n\n");
-                    depth++;
+                    this.depth++;
                     TraverseChildren(element);
-                    depth--;
+                    this.depth--;
                     Write("\n\n");
                     break;
 
@@ -195,27 +208,31 @@ namespace Textify
 
                 case "A":
                     string hrefAttribute = element.GetAttribute("href");
-                    int linkIndex = -1;
+                    int linkNumber = 0;
 
                     if (!string.IsNullOrWhiteSpace(hrefAttribute) && !hrefAttribute.StartsWith("#"))
                     {
-                        if (links.Contains(hrefAttribute))
+                        int existingLinkIndex = this.links.IndexOf(hrefAttribute);
+                        if (existingLinkIndex >= 0)
                         {
-                            linkIndex = links.IndexOf(hrefAttribute) + 1;
+                            linkNumber = existingLinkIndex + 1;
                         }
                         else
                         {
-                            links.Add(hrefAttribute);
-                            linkIndex = links.Count();
+                            this.links.Add(hrefAttribute);
+                            linkNumber = this.links.Count;
                         }
                     }
 
                     TraverseChildren(element);
 
-                    if (linkIndex >= 0)
+                    if (linkNumber > 0)
                     {
-                        Write($" [{linkIndex}]");
+                        Write(" [");
+                        Write(linkNumber.ToString());
+                        Write("]");
                     }
+
                     break;
 
                 default:
@@ -234,7 +251,7 @@ namespace Textify
                     if (this.newLinesCount < 2)
                     {
                         // Remove space at the end of the previous line
-                        if (newLinesCount == 0 && lastWasSpace)
+                        if (this.newLinesCount == 0 && this.lastWasSpace)
                         {
                             this.output.Length--;
                         }
@@ -246,30 +263,29 @@ namespace Textify
                 }
                 else
                 {
+                    bool isWhiteSpace = char.IsWhiteSpace(c);
+
                     if (this.newLinesCount > 0)
                     {
-                        // Skip empty characters at the beginning of lines
-                        if (char.IsWhiteSpace(c))
+                        if (isWhiteSpace)
                         {
+                            // Skip empty characters at the beginning of lines
                             continue;
                         }
-                        else
-                        {
-                            this.newLinesCount = 0;
-                        }
+
+                        // Not whitespace, reset the empty lines count
+                        this.newLinesCount = 0;
                     }
 
-                    bool isSpace = char.IsWhiteSpace(c);
-
                     // Avoid writing 2 consecutive spaces
-                    if (this.lastWasSpace && isSpace)
+                    if (this.lastWasSpace && isWhiteSpace)
                     {
                         continue;
                     }
 
                     if (this.lineLength == 0)
                     {
-                        for (int tab = 0; tab < depth - 1; tab++)
+                        for (int tab = 0; tab < this.depth - 1; tab++)
                         {
                             this.output.Append("\t");
                         }
@@ -277,7 +293,7 @@ namespace Textify
 
                     this.output.Append(c);
                     this.lineLength++;
-                    this.lastWasSpace = isSpace;
+                    this.lastWasSpace = isWhiteSpace;
                 }
             }
         }
