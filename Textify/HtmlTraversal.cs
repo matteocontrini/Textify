@@ -101,38 +101,17 @@ namespace Textify
                     switch (tagName)
                     {
                         case "H1":
-                            Write(new string('=', DividerLength));
-                            Write("\n");
+                            Write("+++ ");
                             break;
                         case "H2":
-                            Write(new string('-', DividerLength));
-                            Write("\n");
+                            Write("++ ");
                             break;
-                        case "H3":
-                            Write("\n");
-                            Write("\n");
+                        default:
+                            Write("+ ");
                             break;
                     }
 
                     TraverseChildren(element);
-
-                    if (this.lineLength > 0)
-                    {
-                        Write("\n");
-
-                        switch (tagName)
-                        {
-                            case "H1":
-                                Write(new string('=', DividerLength));
-                                break;
-                            case "H2":
-                                Write(new string('-', DividerLength));
-                                break;
-                            case "H3":
-                                Write("\n");
-                                break;
-                        }
-                    }
 
                     Write("\n\n");
                     break;
