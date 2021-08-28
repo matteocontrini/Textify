@@ -126,7 +126,8 @@ But maybe a table is nicer:
 
 | One | Value |
 
-[1] http://example.com```
+[1] http://example.com
+```
 
 ## License
 
