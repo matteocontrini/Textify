@@ -105,34 +105,31 @@ namespace Textify
 
                     string headingText = headingTraversal.GetString().Trim();
 
-                    if (headingText != string.Empty)
+                    foreach (string line in headingText.Split('\n'))
                     {
-                        foreach (string line in headingText.Split('\n'))
+                        if (string.IsNullOrWhiteSpace(line))
                         {
-                            if (string.IsNullOrWhiteSpace(line))
-                            {
-                                continue;
-                            }
-
-                            switch (tagName)
-                            {
-                                case "H1":
-                                    Write("+++ ");
-                                    break;
-                                case "H2":
-                                    Write("++ ");
-                                    break;
-                                default:
-                                    Write("+ ");
-                                    break;
-                            }
-
-                            Write(line);
-                            Write("\n");
+                            continue;
                         }
 
-                        Write("\n\n");
+                        switch (tagName)
+                        {
+                            case "H1":
+                                Write("+++ ");
+                                break;
+                            case "H2":
+                                Write("++ ");
+                                break;
+                            default:
+                                Write("+ ");
+                                break;
+                        }
+
+                        Write(line);
+                        Write("\n");
                     }
+
+                    Write("\n\n");
 
                     break;
 
