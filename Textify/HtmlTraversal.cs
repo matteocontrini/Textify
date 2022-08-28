@@ -152,6 +152,7 @@ namespace Textify
 
                 case "LI":
                     Write("* ");
+                    // TODO: the list item might be empty, in that case we should avoid writing the line
                     TraverseChildren(element);
                     Write("\n");
                     break;

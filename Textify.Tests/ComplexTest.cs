@@ -75,6 +75,7 @@ Here is a list of things anyway:
 * One
 * Two
 * Three [2]
+*
 
 But maybe a table is nicer:
 
